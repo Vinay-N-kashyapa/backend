@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Pre-download Kokoro model assets to bake them into the Docker image
-RUN curl -L -f -o model.onnx "https://huggingface.co/hexgrad/Kokoro-82M/resolve/main/model.onnx"
+RUN curl -L -f -o model.onnx "https://github.com/thewh1teagle/kokoro-onnx/releases/download/v0.2.0/kokoro-v0.19.onnx"
 RUN curl -L -f -o voices.json "https://github.com/thewh1teagle/kokoro-onnx/releases/download/v0.2.0/voices.json"
 
 COPY requirements.txt .
