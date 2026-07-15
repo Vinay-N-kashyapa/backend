@@ -1,66 +1,47 @@
-import os
 import logging
-import httpx
-from kokoro_onnx import Kokoro
+import edge_tts
 
 logger = logging.getLogger("pinit.tts")
 
-MODEL_PATH = "kokoro-v1.0.onnx"
-VOICES_PATH = "voices-v1.0.bin"
-
-MODEL_URL = "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx"
-VOICES_URL = "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin"
+# Map Kokoro voices to Edge TTS Premium Azure Neural voices
+VOICE_MAPPING = {
+    # Female Voices
+    "af_heart": "en-US-AriaNeural",       # Warm, sweet US Female
+    "af_nicole": "en-US-JennyNeural",      # Creative US Female
+    "af_sky": "en-US-MichelleNeural",     # Friendly US Female
+    "af_bella": "en-US-AriaNeural",       # Energetic US Female
+    "af_sarah": "en-US-JennyNeural",      # Warm, socratic US Female
+    "bf_emma": "en-GB-SoniaNeural",       # Professional UK Female
+    "bf_isabella": "en-GB-SoniaNeural",   # Professional UK Female
+    
+    # Male Voices
+    "am_liam": "en-US-GuyNeural",         # Clear, friendly US Male
+    "am_fenrir": "en-US-SteffanNeural",    # Clean US Male
+    "am_adam": "en-US-SteffanNeural",     # Wise US Male
+    "bm_lewis": "en-GB-RyanNeural",       # Serious UK Male
+    "bm_george": "en-GB-RyanNeural",      # UK Male
+}
 
 class TTSService:
-    _engine = None
-
-    @staticmethod
-    def _download_file(url: str, dest_path: str):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        }
-        with httpx.Client(follow_redirects=True, timeout=120.0) as client:
-            with client.stream("GET", url, headers=headers) as response:
-                if response.status_code != 200:
-                    raise RuntimeError(f"HTTP Error {response.status_code} while downloading {url}")
-                with open(dest_path, "wb") as f:
-                    for chunk in response.iter_bytes(chunk_size=8192):
-                        f.write(chunk)
-
     @classmethod
     def initialize(cls):
-        if cls._engine is not None:
-            return
-
-        # Ensure files exist, download dynamically on startup if missing
-        if not os.path.exists(MODEL_PATH):
-            logger.info("Downloading Kokoro model...")
-            try:
-                cls._download_file(MODEL_URL, MODEL_PATH)
-                logger.info("Kokoro model downloaded successfully.")
-            except Exception as e:
-                logger.error(f"Failed to download Kokoro model: {e}")
-                raise e
-
-        if not os.path.exists(VOICES_PATH):
-            logger.info("Downloading Kokoro voices...")
-            try:
-                cls._download_file(VOICES_URL, VOICES_PATH)
-                logger.info("Kokoro voices downloaded successfully.")
-            except Exception as e:
-                logger.error(f"Failed to download Kokoro voices: {e}")
-                raise e
-
-        try:
-            cls._engine = Kokoro(MODEL_PATH, VOICES_PATH)
-            logger.info("Kokoro TTS Engine successfully initialized.")
-        except Exception as e:
-            logger.error(f"Failed to initialize Kokoro engine: {e}")
-            raise e
+        logger.info("Edge TTS Service initialized (no local models to load).")
 
     @classmethod
-    def generate(cls, text: str, voice: str = "af_heart", speed: float = 1.0):
-        cls.initialize()
-        if not cls._engine:
-            raise RuntimeError("Kokoro engine is not initialized.")
-        return cls._engine.create(text, voice=voice, speed=speed)
+    async def generate(cls, text: str, voice: str = "af_heart", speed: float = 1.0) -> bytes:
+        # Resolve mapped voice, default to Aria (warm US female)
+        edge_voice = VOICE_MAPPING.get(voice, "en-US-AriaNeural")
+        
+        # Calculate speed rate offset percentage (e.g. 1.0 -> "+0%", 1.2 -> "+20%", 0.8 -> "-20%")
+        rate_percent = int((speed - 1.0) * 100)
+        rate_str = f"{rate_percent:+}%" if rate_percent != 0 else "+0%"
+
+        logger.info(f"Generating speech via Edge TTS: Voice={edge_voice}, Speed={rate_str}")
+        
+        communicate = edge_tts.Communicate(text, edge_voice, rate=rate_str)
+        audio_data = b""
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                audio_data += chunk["data"]
+                
+        return audio_data
