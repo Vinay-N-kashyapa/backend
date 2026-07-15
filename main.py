@@ -24,9 +24,13 @@ def startup_event():
     print("[Startup] Initializing Kokoro TTS Engine...")
     try:
         TTSService.initialize()
-        print("[Startup] Kokoro TTS Engine successfully loaded.")
+        print("[Startup] Kokoro TTS Engine successfully loaded. Running inference smoke test...")
+        samples, sample_rate = TTSService.generate("Warmup", voice="af_heart", speed=1.0)
+        print(f"[Startup] Smoke test success! Generated {len(samples)} samples at {sample_rate}Hz.")
     except Exception as e:
-        print(f"[Startup] Failed to initialize Kokoro TTS: {e}")
+        import traceback
+        print("[Startup] Failed to initialize or execute Kokoro TTS smoke test:")
+        traceback.print_exc()
 
 @app.api_route("/", methods=["GET", "HEAD"])
 def read_root():
