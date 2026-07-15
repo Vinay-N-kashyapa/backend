@@ -13,9 +13,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from app.services.tts_service import TTSService
+
 # Register routers
 app.include_router(llm.router)
 app.include_router(tts.router)
+
+@app.on_event("startup")
+def startup_event():
+    print("[Startup] Initializing Kokoro TTS Engine...")
+    try:
+        TTSService.initialize()
+        print("[Startup] Kokoro TTS Engine successfully loaded.")
+    except Exception as e:
+        print(f"[Startup] Failed to initialize Kokoro TTS: {e}")
 
 @app.api_route("/", methods=["GET", "HEAD"])
 def read_root():
