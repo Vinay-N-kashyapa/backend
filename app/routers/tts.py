@@ -15,7 +15,7 @@ class TTSRequest(BaseModel):
     speed: Optional[float] = 1.0
 
 @router.post("")
-async def generate_speech(req: TTSRequest):
+def generate_speech(req: TTSRequest):
     try:
         # Generate Float32 audio samples and sample rate (usually 24000Hz)
         samples, sample_rate = TTSService.generate(req.text, voice=req.voice, speed=req.speed)
@@ -30,7 +30,7 @@ async def generate_speech(req: TTSRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/benchmark")
-async def benchmark_tts():
+def benchmark_tts():
     try:
         start_time = time.time()
         # Cold/warm start check + simple string generation
