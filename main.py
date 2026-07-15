@@ -17,7 +17,7 @@ app.add_middleware(
 app.include_router(llm.router)
 app.include_router(tts.router)
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def read_root():
     return {"status": "healthy", "service": "PinIT API Server"}
 
