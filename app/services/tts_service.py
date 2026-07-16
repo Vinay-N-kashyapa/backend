@@ -5,21 +5,24 @@ logger = logging.getLogger("pinit.tts")
 
 # Map Kokoro voices to Edge TTS Premium Azure Neural voices
 VOICE_MAPPING = {
-    # Female Voices
-    "af_heart": "en-US-AriaNeural",       # Warm, sweet US Female
-    "af_nicole": "en-US-JennyNeural",      # Creative US Female
-    "af_sky": "en-US-MichelleNeural",     # Friendly US Female
-    "af_bella": "en-US-AriaNeural",       # Energetic US Female
-    "af_sarah": "en-US-JennyNeural",      # Warm, socratic US Female
-    "bf_emma": "en-GB-SoniaNeural",       # Professional UK Female
-    "bf_isabella": "en-GB-SoniaNeural",   # Professional UK Female
+    # ── Mentors ───────────────────────────────────────────────────────────
+    "af_heart": "en-IN-NeerjaExpressiveNeural",  # Ms. Priya (Sweet & Caring Indian Female)
+    "am_liam": "en-IN-PrabhatNeural",             # Mr. Anish (Firm & Caring Indian Male)
     
-    # Male Voices
-    "am_liam": "en-US-GuyNeural",         # Clear, friendly US Male
-    "am_fenrir": "en-US-SteffanNeural",    # Clean US Male
-    "am_adam": "en-US-SteffanNeural",     # Wise US Male
-    "bm_lewis": "en-GB-RyanNeural",       # Serious UK Male
-    "bm_george": "en-GB-RyanNeural",      # UK Male
+    # ── Teachers ──────────────────────────────────────────────────────────
+    "am_fenrir": "en-US-SteffanNeural",           # Mr. Kashyap (Structured US Male)
+    "bf_emma": "en-GB-SoniaNeural",               # Ms. Maya (Professional UK Female)
+    "af_nicole": "en-US-AvaNeural",               # Ms. Divya (Creative/Energetic US Female)
+    
+    # ── Mission Avatars & Fallbacks ───────────────────────────────────────
+    "bf_isabella": "en-GB-LibbyNeural",           # Ms. Shalini (Stoic/Silent UK Female)
+    "af_sarah": "en-US-EmmaNeural",               # Ms. Sneha (Supportive US Female)
+    
+    # ── Interviewers ──────────────────────────────────────────────────────
+    "bm_lewis": "en-GB-RyanNeural",               # Mr. Vikram / Mr. Abhijit (Strict UK Male)
+    "am_adam": "en-US-BrianNeural",               # Mr. Aditya (Wise System Design US Male)
+    "af_bella": "en-US-AriaNeural",               # Ms. Neha (High-Stress US Female)
+    "bm_george": "en-GB-RyanNeural",              # Mr. Abhijit (UK Male Executive)
 }
 
 class TTSService:
