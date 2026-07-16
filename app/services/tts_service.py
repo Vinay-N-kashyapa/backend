@@ -6,7 +6,7 @@ logger = logging.getLogger("pinit.tts")
 # Map Kokoro voices to Edge TTS Premium Azure Neural voices
 VOICE_MAPPING = {
     # ── Mentors ───────────────────────────────────────────────────────────
-    "af_heart": "en-US-EmmaNeural",             # Ms. Priya (Adult, Soft, Cute & Warm US Female)
+    "af_heart": "en-US-AriaNeural",             # Ms. Priya (Polished & Bright US Female - af_bella style)
     "am_liam": "en-IN-PrabhatNeural",             # Mr. Anish (Firm & Caring Indian Male)
     
     # ── Teachers ──────────────────────────────────────────────────────────
