@@ -11,6 +11,7 @@ VOICE_MAPPING = {
     
     # ── Teachers ──────────────────────────────────────────────────────────
     "am_fenrir": "en-US-SteffanNeural",           # Mr. Kashyap (Structured US Male)
+    "am_karthic": "en-US-ChristopherNeural",       # Mr. Karthic (Professional US Male)
     "bf_emma": "en-GB-SoniaNeural",               # Ms. Maya (Professional UK Female)
     "af_nicole": "en-US-AvaNeural",               # Ms. Divya (Creative/Energetic US Female)
     
